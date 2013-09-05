@@ -1,0 +1,119 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:400,700,400italic,700italic&subset=latin,greek-ext,greek,latin-ext);
+
+body {
+  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
+  position: relative;
+}
+
+.CodeMirror {
+  border: 1px solid #93A1A1;
+}
+
+/*.cm-s-default .cm-string {
+  color: #2AA198;
+}
+
+.cm-s-default .cm-keyword {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-selector {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-variable {
+  color: #268BD2;
+}
+
+.CodeMirror-scroll {
+  background-color: #002B36;
+  color: #93A1A1;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+  border-left-color: #93A1A1;
+}*/
+
+
+.cm-s-default .cm-string {
+  color: #2AA198;
+}
+
+.cm-s-default .cm-keyword {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-selector {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-variable {
+  color: #268BD2;
+}
+
+.CodeMirror-scroll {
+  background-color: #FDFDFD;
+  color: #586E75;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+  border-left-color: #586E75;
+}
+
+.CodeMirror {
+  width: 100%;
+  position: absolute;
+  top: 6ex;
+  bottom: 0ex;
+  height: auto;
+  font-size: 0.9em;
+}
+
+div#codepane {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  width: 70ex;
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+}
+
+div.titlebar {
+  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
+  margin-bottom: 10px;
+}
+
+div.titlebar span.title {
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px #666;
+  letter-spacing: 2px;
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+}
+
+div.titlebar ul {
+  float: right;
+  padding: 0;
+  margin: 0;
+}
+
+div.titlebar ul li {
+  float: right;
+  padding: 2px 10px 3px 10px;
+  margin: 0px 2px 0px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #eee;
+  box-shadow: 0 -1px 0 rgba(0%,0%,0%, 0.1), 0 1px 1px rgba(0,0,0,0.2);
+  -webkit-transition: background 100ms linear;
+}
+
+div.titlebar ul li:hover {
+  background-color: #ddd;
+}
+
+div.titlebar ul li:first-child {
+  margin-right: -1px;
+}
+
+/* vi:ts=2:et */
+
