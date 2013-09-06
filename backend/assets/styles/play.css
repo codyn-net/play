@@ -51,6 +51,12 @@ body {
   color: #268BD2;
 }
 
+.cm-s-default .cm-error {
+  text-decoration: line-through;
+  color: #f00;
+  font-weight: bold;
+}
+
 .CodeMirror-scroll {
   background-color: #FDFDFD;
   color: #586E75;
@@ -64,9 +70,32 @@ body {
   width: 100%;
   position: absolute;
   top: 6ex;
-  bottom: 0ex;
+  bottom: 2em;
   height: auto;
   font-size: 0.9em;
+}
+
+div#status {
+  position: absolute;
+  bottom: 0px;
+  height: 1.2em;
+  width: 100%;
+  color: #666;
+  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+div#status input {
+  border: 0px;
+  border-left: 1px solid #aaa;
+  width: 100%;
+  padding-left: 3px;
+}
+
+div#status input:focus {
+  outline: 1px solid #729fcf;
+  border: 0px;
 }
 
 div#codepane {
@@ -79,15 +108,18 @@ div#codepane {
 
 div.titlebar {
   font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
-  margin-bottom: 10px;
+  height: 30px;
+  vertical-align: middle;
 }
 
 div.titlebar span.title {
   font-weight: bold;
-  color: #fff;
-  text-shadow: 1px 1px 2px #666;
+  color: #729fcf;
   letter-spacing: 2px;
   font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+  vertical-align: middle;
+  line-height: 30px;
+  padding-left: 15px;
 }
 
 div.titlebar ul {
@@ -98,17 +130,24 @@ div.titlebar ul {
 
 div.titlebar ul li {
   float: right;
-  padding: 2px 10px 3px 10px;
+  padding: 0px 10px 1px 10px;
   margin: 0px 2px 0px 2px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #eee;
+  background-color: #729fcf;
+  color: #fff;
+
   box-shadow: 0 -1px 0 rgba(0%,0%,0%, 0.1), 0 1px 1px rgba(0,0,0,0.2);
   -webkit-transition: background 100ms linear;
 }
 
 div.titlebar ul li:hover {
-  background-color: #ddd;
+  background-color: #3465a4;
+}
+
+div.titlebar ul li:active {
+  background-color: #729fcf;
+  color: #fff;
 }
 
 div.titlebar ul li:first-child {

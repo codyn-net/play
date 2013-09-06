@@ -1,15 +1,15 @@
 <html>
   <head>
     <title>cȯdγn playground</title>
-    <script src="javascript/codemirror.js" type="text/javascript"></script>
-    <script src="javascript/codyn.js" type="text/javascript"></script>
-    <script src="javascript/jquery-2.0.3.min.js" type="text/javascript"></script>
+    <script src="/javascript/codemirror.js" type="text/javascript"></script>
+    <script src="/javascript/codyn.js" type="text/javascript"></script>
+    <script src="/javascript/jquery-2.0.3.min.js" type="text/javascript"></script>
 
-    <link rel="stylesheet" href="styles/codemirror.css"/>
-    <link rel="stylesheet" href="styles/play.css"/>
+    <link rel="stylesheet" href="/styles/codemirror.css"/>
+    <link rel="stylesheet" href="/styles/play.css"/>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="shortcut icon" href="images/favicon.png"/>
+    <link rel="shortcut icon" href="/images/favicon.png"/>
   </head>
   <body>
     <div id="codepane">
@@ -22,6 +22,8 @@
       <span class="title">cȯdγn playground</span>
     </div>
     <textarea id="code">{{.}}</textarea>
+    <div id="status">
+    </div>
 </div>
 
     <script type="text/javascript">
@@ -41,28 +43,114 @@
         },
       });
 
-      $('#button-share').click(function() {
-        $.post('/share',
-          {
-               code: $('#code').val(),
+      var check_timeout = 0;
+      var check_delay = 500;
+      var error_marker = null;
+
+      function do_check() {
+        if (check_timeout != 0) {
+          clearTimeout(check_timeout);
+          check_timeout = 0;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/check/',
+          dataType: 'json',
+
+          data: {
+            document: cm.getValue(),
           },
 
-          function (data) {
-            
-          },
+          success: function(ret) {
+            if (error_marker != null) {
+              error_marker.clear();
+              error_marker = null;
+            }
 
-          'json'
-        );
+            if (ret.status != 'ok') {
+              error_marker = cm.markText({
+                                           line: ret.error.line[0] - 1,
+                                           ch: ret.error.column[0] - 1,
+                                         },
+
+                                         {
+                                           line: ret.error.line[1] - 1,
+                                           ch: ret.error.column[1],
+                                         },
+
+                                         {
+                                           className: 'cm-error',
+                                           inclusiveRight: true,
+                                           inclusiveLeft: false,
+                                           title: ret.error.message,
+                                         });
+
+              $('#status').text(ret.error.message);
+            } else {
+              $('#status').text('');
+            }
+          },
+        });
+      }
+
+      cm.on('change', function() {
+        if (check_timeout != 0)
+        {
+          clearTimeout(check_timeout);
+        }
+
+        check_timeout = setTimeout(function() {
+          check_timeout = 0;
+          do_check();
+        }, check_delay);
       });
 
       $('#button-check').click(function() {
-
+        do_check();
       });
 
       $('#button-run').click(function() {
 
       });
 
+      $('#button-share').click(function() {
+        $.ajax({
+          type: 'PUT',
+          url: '/d/',
+          dataType: 'json',
+          data: {
+            document: cm.getValue(),
+          },
+          success: function(ret) {
+            window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
+            $('#status').html($('<input type="text"/>').val(document.location.href));
+            $('#status input').select();
+          },
+        });
+      });
+
+      window.addEventListener('popstate', function(e) {
+        if (e.state == null) {
+          return;
+        }
+
+        var url = document.location.pathname;
+
+        if (url.slice(0, 3) == '/d/') {
+          $.get(url + '.cdn', {}, function (data) {
+            if (data[data.length-1] == '\n') {
+              data = data.slice(0, data.length-1);
+            }
+
+            cm.setValue(data);
+          }, 'text');
+        } else {
+          document.location.reload();
+        }
+      });
+
+      do_check();
     </script>
   </body>
 </html>

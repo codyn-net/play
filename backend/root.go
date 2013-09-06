@@ -1,18 +1,29 @@
 package main
 
 import (
+	"html/template"
+	"io"
+	playassets "local/assets"
 	"net/http"
 	"path"
-	playassets "local/assets"
 )
 
+var indextempl *template.Template
+
+func RunIndex(writer io.Writer, doc string) {
+	if DevelopmentMode {
+		if len(playassets.Assets.LocalPath) != 0 {
+			indextempl.ParseFiles(path.Join(playassets.Assets.LocalPath, "index.html"))
+		} else {
+			indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+		}
+	}
+
+	indextempl.Execute(writer, doc)
+}
+
 func handleIndex(writer http.ResponseWriter, req *http.Request) {
-	indextempl.Execute(writer, `# New, empty codyn file
-
-node "a" {
-    x = "2 * pi"
-}`)
-
+	RunIndex(writer, DefaultDocument)
 }
 
 func handleRoot(writer http.ResponseWriter, req *http.Request) {
@@ -26,5 +37,8 @@ func handleRoot(writer http.ResponseWriter, req *http.Request) {
 }
 
 func init() {
+	indextempl = template.New("index")
+	indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+
 	http.HandleFunc("/", handleRoot)
 }
