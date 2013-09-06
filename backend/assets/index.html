@@ -4,6 +4,7 @@
     <script src="/javascript/codemirror.js" type="text/javascript"></script>
     <script src="/javascript/codyn.js" type="text/javascript"></script>
     <script src="/javascript/jquery-2.0.3.min.js" type="text/javascript"></script>
+    <script src="/javascript/jquery.flot.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="/styles/codemirror.css"/>
     <link rel="stylesheet" href="/styles/play.css"/>
@@ -13,20 +14,74 @@
   </head>
   <body>
     <div id="codepane">
-    <div class="titlebar">
-      <ul>
-        <li id="button-share">Share</li>
-        <li id="button-check">Check</li>
-        <li id="button-run">Run</li>
-      </ul>
-      <span class="title">cȯdγn playground</span>
+      <div class="titlebar">
+        <ul>
+          <li id="button-share">Share</li>
+          <li id="button-check">Check</li>
+          <li id="button-run">Run</li>
+        </ul>
+        <span class="title">cȯdγn playground</span>
+      </div>
+      <textarea id="code">{{.}}</textarea>
+      <div id="status">
+      </div>
     </div>
-    <textarea id="code">{{.}}</textarea>
-    <div id="status">
+    <div id="plotpane">
+      <div class="titlebar">
+        <span class="title">Run output</span>
+      </div>
+      <div id="plot">
+      </div>
     </div>
-</div>
 
     <script type="text/javascript">
+      var colors = [
+          [     0,         0,    1.0000],
+          [1.0000,         0,         0],
+          [     0,    1.0000,         0],
+          [     0,         0,    0.1724],
+          [1.0000,    0.1034,    0.7241],
+          [1.0000,    0.8276,         0],
+          [     0,    0.3448,         0],
+          [0.5172,    0.5172,    1.0000],
+          [0.6207,    0.3103,    0.2759],
+          [     0,    1.0000,    0.7586],
+          [     0,    0.5172,    0.5862],
+          [     0,         0,    0.4828],
+      ];
+
+      var colors_html = [];
+
+      function dec_to_hex(c)
+      {
+        var ret = Math.round(c * 255).toString(16);
+
+        if (ret.length == 0)
+        {
+                return "00";
+        }
+        else if (ret.length == 1)
+        {
+                return "0" + ret;
+        }
+        else
+        {
+                return ret;
+        }
+      }
+
+      function rgb_to_hex(c)
+      {
+        return "#" + dec_to_hex(c[0])
+                   + dec_to_hex(c[1])
+                   + dec_to_hex(c[2]);
+      }
+
+      for (var i = 0; i < colors.length; i++)
+      {
+        colors_html.push(rgb_to_hex(colors[i]));
+      }
+
       var spacesInsteadOfTabs = function(cm) {
         var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
         cm.replaceSelection(spaces, "end", "+input");
@@ -46,6 +101,116 @@
       var check_timeout = 0;
       var check_delay = 500;
       var error_marker = null;
+
+      function process_parser_error(ret) {
+        error_marker = cm.markText({
+                                     line: ret.error.line[0] - 1,
+                                     ch: ret.error.column[0] - 1,
+                                   },
+
+                                   {
+                                     line: ret.error.line[1] - 1,
+                                     ch: ret.error.column[1],
+                                   },
+
+                                   {
+                                     className: 'cm-error',
+                                     inclusiveRight: true,
+                                     inclusiveLeft: false,
+                                     title: ret.error.message,
+                                   });
+
+        $('#status').text(ret.error.message);
+        $('#status').addClass('error');
+      }
+
+      function plot_run(data) {
+        var series = [];
+        var i = 0;
+
+        for (var prop in data.data) {
+          var yval = data.data[prop];
+          var d = [];
+
+          for (var j = 0; j < yval.length; ++j)
+          {
+            d.push([data.t[j], yval[j]]);
+          }
+
+          var serie = {
+            label: prop,
+            data: d,
+            color: colors_html[i % colors_html.length],
+          }
+
+          i++;
+          series.push(serie);
+        }
+
+        var options = {
+          grid: {
+            hoverable: true,
+          },
+
+          selection: {
+            mode: 'xy',
+          }
+        };
+
+        $.plot('#plot', series, options);
+      }
+
+      function show_plot_tooltip(x, y, contents) {
+        var tp = $('#plot_tooltip');
+        var cb;
+
+        if (tp.length == 0)
+        {
+                tp = $('<div id="plot_tooltip"/>');
+
+                cb = function(e) {
+                        e.fadeIn(200);
+                };
+        }
+        else
+        {
+                cb = function(e) {
+                        e.show();
+                };
+        }
+
+        tp.text(contents);
+
+        tp.css({
+                position: 'absolute',
+                display: 'none',
+                top: y + 5,
+                left: x + 5,
+        }).appendTo("body");
+
+        cb(tp);
+      }
+
+      var previous_point = null;
+
+      $('#plot').bind('plothover', function(ev, pos, item) {
+        if (!item) {
+          $('#plot_tooltip').remove();
+          previous_point = null;
+          return;
+        }
+
+        var pt = [item.seriesIndex, item.dataIndex];
+
+        if (previous_point != pt) {
+          previous_point = pt;
+
+          var x = item.datapoint[0].toFixed(2);
+          var y = item.datapoint[1].toFixed(5);
+
+          show_plot_tooltip(item.pageX, item.pageY, item.series.label + " at " + x + " = " + y);
+        }
+      });
 
       function do_check() {
         if (check_timeout != 0) {
@@ -69,26 +234,10 @@
             }
 
             if (ret.status != 'ok') {
-              error_marker = cm.markText({
-                                           line: ret.error.line[0] - 1,
-                                           ch: ret.error.column[0] - 1,
-                                         },
-
-                                         {
-                                           line: ret.error.line[1] - 1,
-                                           ch: ret.error.column[1],
-                                         },
-
-                                         {
-                                           className: 'cm-error',
-                                           inclusiveRight: true,
-                                           inclusiveLeft: false,
-                                           title: ret.error.message,
-                                         });
-
-              $('#status').text(ret.error.message);
+              process_parser_error(ret);
             } else {
               $('#status').text('');
+              $('#status').removeClass('error');
             }
           },
         });
@@ -111,7 +260,33 @@
       });
 
       $('#button-run').click(function() {
+        $.ajax({
+          type: 'POST',
+          url: '/run/',
+          dataType: 'json',
 
+          data: {
+            document: cm.getValue(),
+          },
+
+          success: function(ret) {
+            if (error_marker != null) {
+              error_marker.clear();
+              error_marker = null;
+            }
+
+            if (ret.status == 'error') {
+              process_parser_error(ret);
+            } else if (ret.status == 'compile-error') {
+              $('#status').text(ret.error);
+              $('#status').addClass('error');
+            } else {
+              plot_run(ret);
+              $('#status').text('');
+              $('#status').removeClass('error');
+            }
+          },
+        });
       });
 
       $('#button-share').click(function() {
