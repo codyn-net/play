@@ -17,7 +17,7 @@ type Options struct {
 
 var options Options
 
-const DevelopmentMode = true
+const DevelopmentMode = false
 
 func main() {
 	if _, err := flags.Parse(&options); err != nil {
