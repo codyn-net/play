@@ -60,7 +60,7 @@ func ResolveDockerPlayer() (string, error) {
 	var id string
 
 	for _, c := range containers {
-		if c.Image == "play.codyn.net:latest" {
+		if c.Image == "play.codyn.net:v1" {
 			id = c.Id
 			break
 		}
