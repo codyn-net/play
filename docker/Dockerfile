@@ -8,8 +8,14 @@ RUN wget -O - http://packages.codyn.net/sign.key | apt-key add -
 RUN apt-get update
 RUN apt-get -y install libcodyn3 codyn3-tools python-gi cdn-rawc
 RUN rm -f /usr/lib/codyn-3.0/io/libfile.so
-RUN apt-get purge curl
 
-ADD ../player/player /var/lib/cdn-player/cdn-player
+RUN apt-get install -y git make
+RUN wget -O - https://go.googlecode.com/files/go1.1.2.linux-amd64.tar.gz | tar -xz -C /usr/local
+RUN cd /tmp && git clone git://codyn.net/codyn/play.git
+RUN cd /tmp/play/player && GOROOT=/usr/local/go PATH=/usr/local/go/bin:$PATH make
+RUN mkdir -p /var/lib/cdn-player && cp /tmp/play/player/player /var/lib/cdn-player/cdn-player
+RUN rm -rf /tmp/play /usr/local/go
+RUN apt-get purge -y wget git make
+
 ENTRYPOINT ["/var/lib/cdn-player/cdn-player"]
 WORKDIR /var/lib/cdn-player
