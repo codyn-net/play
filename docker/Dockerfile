@@ -9,3 +9,7 @@ RUN apt-get update
 RUN apt-get -y install libcodyn3 codyn3-tools python-gi cdn-rawc
 RUN rm -f /usr/lib/codyn-3.0/io/libfile.so
 RUN apt-get purge curl
+
+ADD ../player/player /var/lib/cdn-player/cdn-player
+ENTRYPOINT ["/var/lib/cdn-player/cdn-player"]
+WORKDIR /var/lib/cdn-player
