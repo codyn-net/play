@@ -13,10 +13,27 @@ import (
 	"time"
 )
 
-const DefaultDocument = `# New, empty codyn file
+const DefaultDocument = `# Welcome to the codyn playground.
+#
+# The playground allows you to quickly test small snippets of
+# codyn networks online. After defining your network in this
+# area, you can click the Run button to run a simulation of 10
+# seconds. All the variables marked as 'integrated' (i.e. states)
+# or 'out' are displayed on the right after the network has been
+# successfully simulated.
+#
+# If you want to keep a reference to a certain snippet that you
+# wrote, then you can use the Share button which saves a snapshot
+# of your codyn network and makes it available by a simple URL
+# You can use this to refer to a snippet of codyn code or share
+# it with someone else.
 
-node "a" {
-    x = "2 * pi"
+defines {
+    n = 4
+}
+
+node "n{1:@n}" {
+    x' = "$(@@1 / @n) * sin(2 * pi * t + $(@@1 / @n) * pi)"
 }`
 
 type Document struct {
