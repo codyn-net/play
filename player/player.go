@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/jessevdk/go-flags"
 	"net/http"
 	"os"
-	"github.com/jessevdk/go-flags"
 )
 
 type Options struct {

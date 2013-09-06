@@ -40,7 +40,7 @@ type DocumentHandler struct {
 
 var Cache = DocumentCache{
 	HashToDocument: map[string]Document{},
-	Documents: list.New(),
+	Documents:      list.New(),
 	MaxSizeInBytes: 10 * 1024 * 1024,
 }
 

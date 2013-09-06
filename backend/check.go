@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"bytes"
-	"io"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 )
 
@@ -13,7 +13,7 @@ type CheckHandler struct {
 }
 
 func (d CheckHandler) run(data io.Reader, writer http.ResponseWriter, req *http.Request) {
-	resp, err := http.Post(options.Player + "check", "text/x-cdn", data)
+	resp, err := http.Post(options.Player+"check", "text/x-cdn", data)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error connecting player: %s\n", err)

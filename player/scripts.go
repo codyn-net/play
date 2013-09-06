@@ -1,13 +1,13 @@
 package main
 
 import (
-	"io"
-	"os"
 	"fmt"
-	"os/exec"
-	"path/filepath"
+	"io"
 	"io/ioutil"
 	playerassets "local/assets"
+	"os"
+	"os/exec"
+	"path/filepath"
 )
 
 var scriptDirectory string
@@ -40,7 +40,7 @@ func init() {
 
 	// Extract scripts from assets to scripts directory
 	for _, f := range a.Dirs["/scripts"] {
-		file := a.Files["/scripts/" + f]
+		file := a.Files["/scripts/"+f]
 
 		err := ioutil.WriteFile(filepath.Join(scriptDirectory, f), file.Data, file.FileMode)
 
