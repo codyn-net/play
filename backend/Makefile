@@ -2,7 +2,7 @@ ASSETS = $(shell find assets/ -type f)
 SOURCES = $(wildcard *.go)
 
 UNAME = $(shell uname)
-ARCH = $(shell uname -i)
+ARCH = $(shell uname -m)
 
 ASSETSSRCDIR = deps/src/local/assets
 ASSETSSRC = $(ASSETSSRCDIR)/assets.go
