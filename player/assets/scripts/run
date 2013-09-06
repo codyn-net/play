@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+from gi.repository import Cdn
+import sys, tempfile, json, os
+
+code = sys.stdin.read()
+
+tmp = tempfile.NamedTemporaryFile()
+tmp.write(code)
+tmp.flush()
+
+network = Cdn.Network()
+
+try:
+    network.load_from_path(tmp.name)
+except Exception as e:
+    ctx = network.get_parser_context()
+    [lstart, lend, cstart, cend, f] = ctx.get_error_location()
+
+    ret = {
+        'status': 'error',
+        'error': {
+            'line': (lstart, lend),
+            'column': (cstart, cend),
+            'message': str(e).replace(os.path.basename(tmp.name), '<file>'),
+        }
+    }
+
+    print(json.dumps(ret))
+    sys.exit(0)
+
+cerror = Cdn.CompileError()
+
+if not network.compile(None, cerror):
+    ret = {
+        'status': 'compile-error',
+        'error': cerror.get_formatted_string(),
+    }
+
+    print(json.dumps(ret))
+    sys.exit(0)
+
+variables = network.find_variables('recurse(children) | if(has-flag(integrated), has-flag(out))')
+monitors = [Cdn.Monitor.new(network, x) for x in variables]
+tmon = Cdn.Monitor.new(network, network.get_integrator().get_variable('t'))
+
+t = [0.0, network.get_integrator().get_default_timestep(), 10.0]
+
+if len(monitors) != 0:
+    network.run(t[0], t[1], t[2])
+
+data = {}
+
+for monitor in monitors:
+    data[monitor.get_variable().get_full_name_for_display()] = monitor.get_data()
+
+ret = {
+    'status': 'ok',
+    't': tmon.get_data(),
+    'data': data,
+}
+
+print(json.dumps(ret))
+
+# vi:ts=4:et
