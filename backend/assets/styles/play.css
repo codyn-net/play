@@ -34,6 +34,9 @@ body {
   border-left-color: #93A1A1;
 }*/
 
+.cm-s-default .cm-comment {
+  color: #93A1A1;
+}
 
 .cm-s-default .cm-string {
   color: #2AA198;
