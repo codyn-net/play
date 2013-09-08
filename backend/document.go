@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"container/list"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -154,7 +155,7 @@ func (x *DocumentCache) Load(hash string) ([]byte, bool) {
 	}
 }
 
-func (d *DocumentCache) AddDocument(data []byte) (string, bool) {
+func (d *DocumentCache) AddDocument(data []byte) (string, error) {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
 
@@ -166,7 +167,7 @@ func (d *DocumentCache) AddDocument(data []byte) (string, bool) {
 		if existing, ok := d.Read(h, true); ok {
 			if bytes.Equal(existing, data) {
 				// Document already exists, just return hash then
-				return h, true
+				return h, nil
 			} else {
 				// Hash collision, generate new hash by just
 				// appending newlines, it doesn't actually
@@ -177,16 +178,16 @@ func (d *DocumentCache) AddDocument(data []byte) (string, bool) {
 		} else {
 			// Write data to disk
 			if err := ioutil.WriteFile(path.Join(options.Data, h), data, os.FileMode(0644)); err != nil {
-				return "", false
+				return "", err
 			}
 
 			// Still insert the original data though
 			d.AddLocked(h, data)
-			return h, true
+			return h, nil
 		}
 	}
 
-	return "", false
+	return "", nil
 }
 
 func (d DocumentHandler) Get(writer http.ResponseWriter, req *http.Request) {
@@ -233,7 +234,7 @@ func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
 	doc := []byte(req.FormValue("document"))
 
 	if len(doc) == 0 {
-		http.NotFound(writer, req)
+		http.Error(writer, "Missing document", http.StatusBadRequest)
 		return
 	}
 
@@ -241,7 +242,7 @@ func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
 		doc = append(doc, '\n')
 	}
 
-	if hash, ok := Cache.AddDocument(doc); ok {
+	if hash, err := Cache.AddDocument(doc); err == nil {
 		retval := map[string]string{
 			"hash": hash,
 		}
@@ -251,7 +252,7 @@ func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
 		enc := json.NewEncoder(writer)
 		enc.Encode(retval)
 	} else {
-		http.NotFound(writer, req)
+		http.Error(writer, fmt.Sprintf("Failed to add document: %s", err), http.StatusInternalServerError)
 	}
 }
 

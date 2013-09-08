@@ -12,13 +12,14 @@ import (
 
 var scriptDirectory string
 
-func RunScript(stdin io.Reader, stdout io.Writer, script string, args ...string) error {
 	cmd := exec.Command(filepath.Join(scriptDirectory, script), args...)
+func RunScript(stdin io.Reader, stdout io.Writer, stderr io.Writer, script string, args ...string) error {
 
 	cmd.Dir = scriptDirectory
 
 	cmd.Stdin = stdin
 	cmd.Stdout = stdout
+	cmd.Stderr = stderr
 
 	return cmd.Run()
 }

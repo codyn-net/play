@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -17,10 +18,11 @@ func (d CheckHandler) run(data io.Reader, writer http.ResponseWriter, req *http.
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error connecting player: %s\n", err)
-		http.NotFound(writer, req)
+		http.Error(writer, fmt.Sprintf("Player service is unavailable: %s", err), http.StatusServiceUnavailable)
 	} else {
 		if resp.StatusCode != 200 {
-			http.NotFound(writer, req)
+			b, _ := ioutil.ReadAll(resp.Body)
+			http.Error(writer, string(b), resp.StatusCode)
 		} else {
 			writer.Header().Add("Content-type", "application/json")
 			io.Copy(writer, resp.Body)
@@ -32,7 +34,7 @@ func (d CheckHandler) Get(writer http.ResponseWriter, req *http.Request) {
 	doc := req.URL.Path[7:]
 
 	if data, ok := Cache.Load(doc); !ok {
-		http.NotFound(writer, req)
+		http.Error(writer, fmt.Sprintf("Could not find document `%s'"), http.StatusNotFound)
 	} else {
 		buf := bytes.NewBuffer(data)
 		d.run(buf, writer, req)
