@@ -12,8 +12,11 @@ import (
 
 var scriptDirectory string
 
-	cmd := exec.Command(filepath.Join(scriptDirectory, script), args...)
 func RunScript(stdin io.Reader, stdout io.Writer, stderr io.Writer, script string, args ...string) error {
+	scriptpath := filepath.Join(scriptDirectory, script)
+
+	args = append([]string{scriptpath}, args...)
+	cmd := exec.Command(options.Python, args...)
 
 	cmd.Dir = scriptDirectory
 

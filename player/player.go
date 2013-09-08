@@ -8,6 +8,7 @@ import (
 
 type Options struct {
 	Listen string `short:"l" long:"listen" description:"The address to listen on" default:":4785"`
+	Python string `short:"p" long:"python" description:"The python interpreter to use" default:"python"`
 }
 
 var options Options
