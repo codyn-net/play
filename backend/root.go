@@ -11,7 +11,7 @@ import (
 var indextempl *template.Template
 
 func RunIndex(writer io.Writer, doc string) {
-	if DevelopmentMode {
+	if options.Development {
 		if len(playassets.Assets.LocalPath) != 0 {
 			indextempl.ParseFiles(path.Join(playassets.Assets.LocalPath, "index.html"))
 		} else {
