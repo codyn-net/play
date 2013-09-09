@@ -6,16 +6,27 @@ import (
 	playassets "local/assets"
 	"net/http"
 	"path"
+	"fmt"
+	"os"
 )
 
 var indextempl *template.Template
 
 func RunIndex(writer io.Writer, doc string) {
 	if options.Development {
+		var err error
+
+		indextempl = template.New("index.html")
+
 		if len(playassets.Assets.LocalPath) != 0 {
-			indextempl.ParseFiles(path.Join(playassets.Assets.LocalPath, "index.html"))
+			indextempl, err = indextempl.ParseFiles(path.Join(playassets.Assets.LocalPath, "index.html"))
+
 		} else {
-			indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+			indextempl, err = indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+		}
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to parse template: %s\n", err)
 		}
 	}
 
@@ -37,8 +48,10 @@ func handleRoot(writer http.ResponseWriter, req *http.Request) {
 }
 
 func init() {
-	indextempl = template.New("index")
-	indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+	if !options.Development {
+		indextempl = template.New("index.html")
+		indextempl.Parse(string(playassets.Assets.Files["/index.html"].Data))
+	}
 
 	http.HandleFunc("/", handleRoot)
 }

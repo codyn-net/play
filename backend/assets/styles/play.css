@@ -1,74 +1,151 @@
 @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:400,700,400italic,700italic&subset=latin,greek-ext,greek,latin-ext);
 
+@import url('hl.css');
+
 body {
   font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
   position: relative;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+
+              box-orient: horizontal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
 }
 
-.CodeMirror {
-  border: 1px solid #93A1A1;
+#codepane {
+  -webkit-flex-flow: 80ex;
+  -webkit-flex-flow: 90ch;
+  -webkit-box-flex: 0 1 90ch;
+      -webkit-flex: 0 1 90ch;
+              flex: 0 1 90ch;
+
+  -webkit-box-ordinal-group: 1;
+              -webkit-order: 1;
+                      order: 1;
+
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
 }
 
-/*.cm-s-default .cm-string {
-  color: #2AA198;
+#plotpane {
+  -webkit-flex-flow: auto;
+  -webkit-box-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+              flex: 1 1 auto;
+
+  -webkit-box-ordinal-group: 2;
+              -webkit-order: 2;
+                      order: 2;
 }
 
-.cm-s-default .cm-keyword {
-  color: #CB4B16;
+#codepane, #plotpane {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+
+              box-orient: vertical;
+  -webkit-flex-direction: column;
+          flex-direction: column;
 }
 
-.cm-s-default .cm-selector {
-  color: #CB4B16;
+#codepane .content, #plotpane .content {
+  border: 1px solid #d4e2f0;
+  border-top: 0px;
+
+  margin: 0px 0px -1px 0px;
+
+  -webkit-flex-flow: auto;
+  -webkit-box-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+              flex: 1 1 auto;
+
+  position: relative;
 }
 
-.cm-s-default .cm-variable {
-  color: #268BD2;
+#codepane .content {
+  margin-right: 2px;
 }
 
-.CodeMirror-scroll {
-  background-color: #002B36;
-  color: #93A1A1;
+#plotpane .content {
+  margin-left: 2px;
 }
 
-.CodeMirror div.CodeMirror-cursor {
-  border-left-color: #93A1A1;
-}*/
+#codepane header, #plotpane header {
+  height: 2em;
 
-.cm-s-default .cm-comment {
-  color: #93A1A1;
+ -webkit-box-flex: 1 1 2em;
+     -webkit-flex: 0 0 2em;
+             flex: 0 0 2em;
+
+  background: -webkit-gradient(linear, left top, left bottom, from(#3465a4), to(#204a87));
+  background: linear-gradient(to bottom, #3465a4 , #204a87);
 }
 
-.cm-s-default .cm-string {
-  color: #2AA198;
+#codepane header {
+  padding-right: 10px;
 }
 
-.cm-s-default .cm-keyword {
-  color: #CB4B16;
+#codepane .CodeMirror {
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+  border: 0;
+  position: absolute;
+  right: 0; left: 0; top: 0; bottom: 0;
+  height: auto;
 }
 
-.cm-s-default .cm-selector {
-  color: #CB4B16;
+#codepane .CodeMirror-scroll {
+  position: absolute;
+  right: 0; left: 0; top: 0; bottom: 0;
 }
 
-.cm-s-default .cm-variable {
-  color: #268BD2;
-}
-
-.cm-s-default .cm-error {
-  text-decoration: line-through;
-  color: #f00;
+header span.title {
   font-weight: bold;
+  color: #d4e2f0;
+  text-shadow: 0px 0px 3px #000;
+  letter-spacing: 2px;
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+  vertical-align: middle;
+  line-height: 2em;
+  padding-left: 10px;
 }
 
-.CodeMirror-scroll {
-  background-color: #FDFDFD;
-  color: #586E75;
+#codepane header ul {
+  float: right;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  line-height: 1.4em;
+  padding-top: 0.3em;
 }
 
-.CodeMirror div.CodeMirror-cursor {
-  border-left-color: #586E75;
+#codepane header ul li {
+  float: right;
+  padding: 0px 10px 1px 10px;
+  margin: 0px 2px 0px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  background: linear-gradient(to top, #204a87, #3465a4);
+  color: #d4e2f0;
+
+  box-shadow: 0 0 3px #000;
 }
 
+#codepane header ul li:hover {
+  background: linear-gradient(to top, #3465a4, #729fcf);
+}
+
+#codepane header ul li:active {
+  background: #729fcf;
+  color: #fff;
+}
+
+#codepane header ul li:first-child {
+  margin-right: -1px;
+}
+
+/*
 .CodeMirror {
   width: 100%;
   position: absolute;
@@ -180,7 +257,7 @@ div#plotpane div#plot {
 
 div#status.error {
   color: #cc0000;
-}
+}*/
 
 /* vi:ts=2:et */
 

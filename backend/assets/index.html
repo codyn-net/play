@@ -14,24 +14,32 @@
   </head>
   <body>
     <div id="codepane">
-      <div class="titlebar">
+      <header>
         <ul>
           <li id="button-share">Share</li>
           <li id="button-check">Check</li>
           <li id="button-run">Run</li>
         </ul>
         <span class="title">cȯdγn playground</span>
+      </header>
+      <div class="content">
+        <textarea id="code">{{.}}</textarea>
       </div>
-      <textarea id="code">{{.}}</textarea>
-      <div id="status">
-      </div>
+<!--      <div id="status">-->
+<!--      </div>-->
     </div>
     <div id="plotpane">
-      <div class="titlebar">
-        <span class="title">Run output</span>
+      <header>
+        <span class="title">Run output:</span>
+      </header>
+      <div class="content">
       </div>
-      <div id="plot">
-      </div>
+
+<!--      <div class="titlebar">-->
+<!--        <span class="title">Run output</span>-->
+<!--      </div>-->
+<!--      <div id="plot">-->
+<!--      </div>-->
     </div>
 
     <script type="text/javascript" src="/javascript/play.js"></script>
