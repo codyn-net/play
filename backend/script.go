@@ -9,12 +9,20 @@ import (
 	"os"
 )
 
-type CheckHandler struct {
+type ScriptHandler struct {
 	RestishVoid
+
+	Script string
 }
 
-func (d CheckHandler) run(data io.Reader, writer http.ResponseWriter, req *http.Request) {
-	resp, err := http.Post(options.Player+"check", "text/x-cdn", data)
+func NewScriptHandler(script string) http.Handler {
+	return NewRestishHandler(ScriptHandler{
+		Script: script,
+	})
+}
+
+func (d ScriptHandler) run(data io.Reader, writer http.ResponseWriter, req *http.Request) {
+	resp, err := http.Post(options.Player+d.Script, "text/x-cdn", data)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error connecting player: %s\n", err)
@@ -30,8 +38,8 @@ func (d CheckHandler) run(data io.Reader, writer http.ResponseWriter, req *http.
 	}
 }
 
-func (d CheckHandler) Get(writer http.ResponseWriter, req *http.Request) {
-	doc := req.URL.Path[7:]
+func (d ScriptHandler) Get(writer http.ResponseWriter, req *http.Request) {
+	doc := req.URL.Path[(len(d.Script)+2):]
 
 	if data, ok := Cache.Load(doc); !ok {
 		http.Error(writer, fmt.Sprintf("Could not find document `%s'"), http.StatusNotFound)
@@ -41,7 +49,7 @@ func (d CheckHandler) Get(writer http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (d CheckHandler) Post(writer http.ResponseWriter, req *http.Request) {
+func (d ScriptHandler) Post(writer http.ResponseWriter, req *http.Request) {
 	doc := req.FormValue("document")
 
 	buf := bytes.NewBuffer([]byte(doc))
@@ -49,5 +57,9 @@ func (d CheckHandler) Post(writer http.ResponseWriter, req *http.Request) {
 }
 
 func init() {
-	http.Handle("/check/", NewRestishHandler(CheckHandler{}))
+	commands := []string{"check", "run", "graph"}
+
+	for _, cmd := range commands {
+		http.Handle("/"+cmd+"/", NewScriptHandler(cmd))
+	}
 }
