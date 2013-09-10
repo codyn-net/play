@@ -1,13 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	playassets "local/assets"
 	"net/http"
-	"path"
-	"fmt"
 	"os"
+	"path"
 )
 
 var indextempl *template.Template

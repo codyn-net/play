@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/jessevdk/go-flags"
 	"fmt"
+	"github.com/jessevdk/go-flags"
 	playassets "local/assets"
 	"net/http"
 	"os"
@@ -10,10 +10,10 @@ import (
 )
 
 type Options struct {
-	Listen string `short:"l" long:"listen" description:"The address to listen on" default:":9876"`
-	Data   string `short:"d" long:"data" description:"Location where the data is stored" default:"data"`
-	Player string `short:"p" long:"player" description:"The address of the player server" default:""`
-	Development bool `long:"dev" description:"Enable development mode (implies player=http://localhost:4785)"`
+	Listen      string `short:"l" long:"listen" description:"The address to listen on" default:":9876"`
+	Data        string `short:"d" long:"data" description:"Location where the data is stored" default:"data"`
+	Player      string `short:"p" long:"player" description:"The address of the player server" default:""`
+	Development bool   `long:"dev" description:"Enable development mode (implies player=http://localhost:4785)"`
 }
 
 var options Options

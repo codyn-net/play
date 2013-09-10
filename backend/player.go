@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"net"
 	"net/http"
 	"net/http/httputil"
-	"encoding/json"
-	"errors"
 )
 
 type Container struct {
-	Id string
+	Id    string
 	Image string
 }
 
@@ -72,7 +72,7 @@ func ResolveDockerPlayer() (string, error) {
 
 	info := ContainerInfo{}
 
-	if err := dockerRequest(cc, "/containers/" + id + "/json", &info); err != nil {
+	if err := dockerRequest(cc, "/containers/"+id+"/json", &info); err != nil {
 		return "", err
 	}
 
