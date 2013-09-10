@@ -12,7 +12,21 @@ import (
 
 var scriptDirectory string
 
+func extractScript(f string) {
+	file := playerassets.Assets.Files["/scripts/"+f]
+
+	err := ioutil.WriteFile(filepath.Join(scriptDirectory, f), file.Data, file.FileMode)
+
+	if err != nil {
+		panic(fmt.Sprintf("Failed to write script `%s': %s", f, err))
+	}
+}
+
 func RunScript(stdin io.Reader, stdout io.Writer, stderr io.Writer, script string, args ...string) error {
+	if options.Development {
+		extractScript(script)
+	}
+
 	scriptpath := filepath.Join(scriptDirectory, script)
 
 	args = append([]string{scriptpath}, args...)
@@ -40,16 +54,8 @@ func init() {
 		panic(fmt.Sprintf("Failed to create scripts directory: %s", err))
 	}
 
-	a := playerassets.Assets
-
 	// Extract scripts from assets to scripts directory
-	for _, f := range a.Dirs["/scripts"] {
-		file := a.Files["/scripts/"+f]
-
-		err := ioutil.WriteFile(filepath.Join(scriptDirectory, f), file.Data, file.FileMode)
-
-		if err != nil {
-			panic(fmt.Sprintf("Failed to write script `%s': %s", f, err))
-		}
+	for _, f := range playerassets.Assets.Dirs["/scripts"] {
+		extractScript(f)
 	}
 }
