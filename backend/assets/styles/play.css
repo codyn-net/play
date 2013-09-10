@@ -10,9 +10,11 @@ body {
 
   display: -webkit-box;
   display: -webkit-flex;
+  display: -moz-box;
   display: flex;
 
   height: 100%;
+  width: 100%;
 
               box-orient: horizontal;
   -webkit-flex-direction: row;
@@ -27,6 +29,7 @@ body {
   width: 80ch;
   -webkit-box-flex: 0 1 80ch;
       -webkit-flex: 0 1 80ch;
+     -moz-box-flex: 0;
               flex: 0 1 80ch;
 
   -webkit-box-ordinal-group: 1;
@@ -40,6 +43,7 @@ body {
   -webkit-flex-flow: auto;
   -webkit-box-flex: 1 1 auto;
       -webkit-flex: 1 1 auto;
+     -moz-box-flex: 1;
               flex: 1 1 auto;
 
   -webkit-box-ordinal-group: 2;
@@ -97,6 +101,8 @@ body {
 
   background: -webkit-gradient(linear, left top, left bottom, from(#3465a4), to(#204a87));
   background: linear-gradient(to bottom, #3465a4 , #204a87);
+
+  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
 }
 
 #codepane header {
@@ -121,7 +127,6 @@ header span.title {
   color: #d4e2f0;
   text-shadow: 0px 0px 3px #000;
   letter-spacing: 2px;
-  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
   vertical-align: middle;
   line-height: 2em;
   padding-left: 10px;
@@ -139,7 +144,7 @@ header span.title {
 #codepane header ul li {
   float: right;
   padding: 0px 10px 1px 10px;
-  margin: 0px 2px 0px 2px;
+  margin: 0px 3px 0px 3px;
 
   -webkit-border-radius: 5px;
           border-radius: 5px;
