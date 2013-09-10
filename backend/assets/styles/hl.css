@@ -1,0 +1,39 @@
+.cm-s-default .cm-comment {
+  color: #93A1A1;
+}
+
+.cm-s-default .cm-string {
+  color: #2AA198;
+}
+
+.cm-s-default .cm-keyword {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-selector {
+  color: #CB4B16;
+}
+
+.cm-s-default .cm-variable {
+  color: #268BD2;
+}
+
+.cm-s-default .cm-error {
+  text-decoration: line-through;
+  color: #f00;
+  font-weight: bold;
+}
+
+.CodeMirror-scroll {
+  background-color: #FDFDFD;
+  color: #586E75;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+  border-left-color: #586E75;
+}
+
+.CodeMirror-selected,
+.CodeMirror-focused .CodeMirror-selected {
+  background-color: #eee;
+}

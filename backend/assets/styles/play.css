@@ -6,6 +6,8 @@ body {
   font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
   position: relative;
 
+  margin: 0;
+
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -17,10 +19,10 @@ body {
 
 #codepane {
   -webkit-flex-flow: 80ex;
-  -webkit-flex-flow: 90ch;
-  -webkit-box-flex: 0 1 90ch;
-      -webkit-flex: 0 1 90ch;
-              flex: 0 1 90ch;
+  -webkit-flex-flow: 80ch;
+  -webkit-box-flex: 0 1 80ch;
+      -webkit-flex: 0 1 80ch;
+              flex: 0 1 80ch;
 
   -webkit-box-ordinal-group: 1;
               -webkit-order: 1;
@@ -54,8 +56,6 @@ body {
   border: 1px solid #d4e2f0;
   border-top: 0px;
 
-  margin: 0px 0px -1px 0px;
-
   -webkit-flex-flow: auto;
   -webkit-box-flex: 1 1 auto;
       -webkit-flex: 1 1 auto;
@@ -70,6 +70,17 @@ body {
 
 #plotpane .content {
   margin-left: 2px;
+}
+
+#plotpane #plot {
+  position: absolute;
+  right: 5px; left: 5px; top: 5px; bottom: 5px;
+}
+
+#plot_tooltip {
+  background-color: #eee;
+  border: 1px solid #aaa;
+  padding: 0px 5px 0px 5px;
 }
 
 #codepane header, #plotpane header {
@@ -124,7 +135,10 @@ header span.title {
   float: right;
   padding: 0px 10px 1px 10px;
   margin: 0px 2px 0px 2px;
-  border-radius: 5px;
+
+  -webkit-border-radius: 5px;
+          border-radius: 5px;
+
   cursor: pointer;
   background: linear-gradient(to top, #204a87, #3465a4);
   color: #d4e2f0;
@@ -143,6 +157,44 @@ header span.title {
 
 #codepane header ul li:first-child {
   margin-right: -1px;
+}
+
+
+@media screen and (max-device-width: 640px) {
+  #plotpane {
+    display: none;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  body, #codepane {
+    display: block;
+    position: relative;
+  }
+
+  #codepane {
+    position: relative;
+  }
+
+  #codepane header {
+    padding-right: 5px;
+  }
+
+  #codepane .content {
+    font-size: 7px;
+  }
+
+  #codepane .content, #codepane .CodeMirror, #codepane .CodeMirror-scroll {
+    position: relative;
+  }
+}
+
+@media screen and (max-device-width: 640px) and (orientation: portrait) {
+  #codepane .content {
+    font-size: 8px;
+  }
 }
 
 /*
