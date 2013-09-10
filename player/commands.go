@@ -21,15 +21,14 @@ func handleScript(script string, writer http.ResponseWriter, req *http.Request) 
 	}
 }
 
-func handleCheck(writer http.ResponseWriter, req *http.Request) {
-	handleScript("check", writer, req)
-}
-
-func handleRun(writer http.ResponseWriter, req *http.Request) {
-	handleScript("run", writer, req)
-}
-
 func init() {
-	http.HandleFunc("/check", handleCheck)
-	http.HandleFunc("/run", handleRun)
+	commands := []string{"check", "run", "graph"}
+
+	for _, cmd := range commands {
+		c := cmd
+
+		http.HandleFunc("/"+c, func(writer http.ResponseWriter, req *http.Request) {
+			handleScript(c, writer, req)
+		})
+	}
 }
