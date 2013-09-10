@@ -51,6 +51,10 @@ func main() {
 		playassets.Assets.LocalPath = "./assets"
 	}
 
+	if err := os.MkdirAll(options.Data, 0766); err != nil {
+		panic(err)
+	}
+
 	fmt.Printf("[play] Going to listen on: %s\n", options.Listen)
 
 	if err := http.ListenAndServe(options.Listen, nil); err != nil {
