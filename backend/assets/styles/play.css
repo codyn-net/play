@@ -12,6 +12,8 @@ body {
   display: -webkit-flex;
   display: flex;
 
+  height: 100%;
+
               box-orient: horizontal;
   -webkit-flex-direction: row;
           flex-direction: row;
