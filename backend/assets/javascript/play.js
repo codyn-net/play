@@ -41,8 +41,7 @@ function process_parser_error(ret) {
                                inclusiveLeft: false,
                                title: ret.error.message});
 
-    $('#status').text(ret.error.message);
-    $('#status').addClass('error');
+    set_status(ret.error.message, 'error');
 }
 
 function plot_run(data) {
@@ -133,6 +132,26 @@ $('#plot').bind('plothover', function(ev, pos, item) {
     }
 });
 
+function set_status(message, errorclass) {
+    var st = $('#status');
+
+    if (typeof(message) == "string") {
+        st.text(message);
+    } else {
+        st.html(message);
+    }
+
+    st.addClass(errorclass);
+}
+
+function clear_status() {
+    var st = $('#status');
+
+    st.text('');
+    st.removeClass('error');
+}
+
+
 function do_check() {
     if (check_timeout != 0) {
         clearTimeout(check_timeout);
@@ -157,9 +176,53 @@ function do_check() {
             if (ret.status != 'ok') {
                 process_parser_error(ret);
             } else {
-                $('#status').text('');
-                $('#status').removeClass('error');
+                clear_status();
             }
+        },
+    });
+}
+
+function do_run() {
+    $.ajax({
+        type: 'POST',
+        url: '/run/',
+        dataType: 'json',
+
+        data: {
+            document: cm.getValue(),
+        },
+
+        success: function(ret) {
+            if (error_marker != null) {
+                error_marker.clear();
+                error_marker = null;
+            }
+
+            if (ret.status == 'error') {
+                process_parser_error(ret);
+            } else if (ret.status == 'compile-error') {
+                set_status(ret.error, 'error');
+            } else {
+                plot_run(ret);
+                clear_status();
+            }
+        },
+    });
+}
+
+function do_share() {
+    $.ajax({
+        type: 'PUT',
+        url: '/d/',
+        dataType: 'json',
+        data: {
+            document: cm.getValue(),
+        },
+        success: function(ret) {
+            window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
+
+            set_status($('<input type="text"/>').val(document.location.href));
+            $('#status input').select();
         },
     });
 }
@@ -180,49 +243,11 @@ $('#button-check').click(function() {
 });
 
 $('#button-run').click(function() {
-    $.ajax({
-        type: 'POST',
-        url: '/run/',
-        dataType: 'json',
-
-        data: {
-            document: cm.getValue(),
-        },
-
-        success: function(ret) {
-            if (error_marker != null) {
-                error_marker.clear();
-                error_marker = null;
-            }
-
-            if (ret.status == 'error') {
-                process_parser_error(ret);
-            } else if (ret.status == 'compile-error') {
-                $('#status').text(ret.error);
-                $('#status').addClass('error');
-            } else {
-                plot_run(ret);
-                $('#status').text('');
-                $('#status').removeClass('error');
-            }
-        },
-    });
+    do_run();
 });
 
 $('#button-share').click(function() {
-    $.ajax({
-        type: 'PUT',
-        url: '/d/',
-        dataType: 'json',
-        data: {
-            document: cm.getValue(),
-        },
-        success: function(ret) {
-            window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
-            $('#status').html($('<input type="text"/>').val(document.location.href));
-            $('#status input').select();
-        },
-    });
+    do_share();
 });
 
 window.addEventListener('popstate', function(e) {

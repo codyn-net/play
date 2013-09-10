@@ -197,27 +197,6 @@ header span.title {
   }
 }
 
-/*
-.CodeMirror {
-  width: 100%;
-  position: absolute;
-  top: 6ex;
-  bottom: 2em;
-  height: auto;
-  font-size: 0.9em;
-}
-
-div#status {
-  position: absolute;
-  bottom: 0px;
-  height: 1.2em;
-  width: 100%;
-  color: #666;
-  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
-  font-size: 0.85em;
-  font-style: italic;
-}
-
 div#status input {
   border: 0px;
   border-left: 1px solid #aaa;
@@ -229,6 +208,28 @@ div#status input:focus {
   outline: 1px solid #729fcf;
   border: 0px;
 }
+
+div#status {
+  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+div#status.error {
+  color: #cc0000;
+}
+
+/*
+.CodeMirror {
+  width: 100%;
+  position: absolute;
+  top: 6ex;
+  bottom: 2em;
+  height: auto;
+  font-size: 0.9em;
+}
+
+
 
 div#codepane {
   position: absolute;
