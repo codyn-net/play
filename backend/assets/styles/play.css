@@ -20,8 +20,11 @@ body {
 }
 
 #codepane {
-  -webkit-flex-flow: 80ex;
-  -webkit-flex-flow: 80ch;
+  -webkit-flex-basis: 80ex;
+  -webkit-flex-basis: 80ch;
+  flex-basis: 80ch;
+  width: 80ex;
+  width: 80ch;
   -webkit-box-flex: 0 1 80ch;
       -webkit-flex: 0 1 80ch;
               flex: 0 1 80ch;
