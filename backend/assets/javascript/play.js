@@ -67,6 +67,10 @@ function plot_run(data) {
         series.push(serie);
     }
 
+    series.sort(function(a, b) {
+        return a.label < b.label ? -1 : (a.label > b.label ? 1 : 0);
+    });
+
     var options = {
         grid: {
             hoverable: true,
