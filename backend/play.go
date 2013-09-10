@@ -51,5 +51,8 @@ func main() {
 		playassets.Assets.LocalPath = "./assets"
 	}
 
-	http.ListenAndServe(options.Listen, nil)
+	if err := http.ListenAndServe(options.Listen, nil); err != nil {
+		fmt.Fprintf(os.Stderr, "Error while listening: %s\n", err)
+		os.Exit(1)
+	}
 }
