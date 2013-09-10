@@ -1,4 +1,4 @@
-var colors = [
+var colors_html = [
     "#268BD2",
     "#859900",
     "#DC322F",
