@@ -61,7 +61,7 @@ function plot_run(data) {
             label: prop,
             data: d,
             color: colors_html[i % colors_html.length],
-        }
+        };
 
         i++;
         series.push(serie);
