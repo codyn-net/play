@@ -51,6 +51,8 @@ func main() {
 		playassets.Assets.LocalPath = "./assets"
 	}
 
+	fmt.Printf("[play] Going to listen on: %s\n", options.Listen)
+
 	if err := http.ListenAndServe(options.Listen, nil); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while listening: %s\n", err)
 		os.Exit(1)
