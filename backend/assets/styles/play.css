@@ -126,29 +126,28 @@ header ul li:active {
     display: none;
   }
 
-  body {
-    margin: 0;
-  }
-
-  body, #codepane {
-    display: block;
-    position: relative;
-  }
-
   #codepane {
-    position: relative;
+    right: 0;
+    width: auto;
   }
 
   #codepane header {
-    padding-right: 5px;
+    font-size: 10px;
+    height: 30px;
+  }
+
+  #codepane header ul {
+    line-height: 20px;
+    margin-top: 2px;
+  }
+
+  #codepane span.title {
+    line-height: 30px;
   }
 
   #codepane .content {
     font-size: 7px;
-  }
-
-  #codepane .content, #codepane .CodeMirror, #codepane .CodeMirror-scroll {
-    position: relative;
+    top: 30px;
   }
 }
 
