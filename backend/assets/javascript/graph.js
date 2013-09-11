@@ -1,3 +1,5 @@
+"use strict";
+
 var Node = function(obj) {
 	this.obj = obj;
 };
@@ -70,7 +72,7 @@ Edge.prototype._evaluate_bezier_coord = function(p0, p1, p2, p3, t) {
 Edge.prototype._evaluate_bezier = function(points, t) {
 	return {
 		x: this._evaluate_bezier_coord(points[0].x, points[1].x, points[2].x, points[3].x, t),
-		y: this._evaluate_bezier_coord(points[0].y, points[1].y, points[2].y, points[3].y, t),
+		y: this._evaluate_bezier_coord(points[0].y, points[1].y, points[2].y, points[3].y, t)
 	};
 };
 
@@ -268,7 +270,7 @@ var Graph = {
 			var child = network.children[i];
 
 			if ($.inArray('node', child.type) != -1) {
-				obj = new Node(child);
+				var obj = new Node(child);
 				nodes.push(obj);
 				nodemap[child.id] = obj;
 

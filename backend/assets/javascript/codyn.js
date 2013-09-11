@@ -1,3 +1,5 @@
+"use strict";
+
 CodeMirror.defineMode("codyn", function() {
 
   var TOKEN_NAMES = {
@@ -79,7 +81,7 @@ CodeMirror.defineMode("codyn", function() {
       return null;
     },
 
-    lineComment: '#',
+    lineComment: '#'
   };
 });
 

@@ -1,3 +1,5 @@
+"use strict";
+
 var colors_html = [
     "#268BD2",
     "#859900",
@@ -21,8 +23,8 @@ var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
     mode: 'codyn',
     autoFocus: true,
     extraKeys: {
-        Tab: spacesInsteadOfTabs,
-    },
+        Tab: spacesInsteadOfTabs
+    }
 });
 
 var check_timeout = 0;
@@ -59,7 +61,7 @@ function plot_run(data) {
         var serie = {
             label: prop,
             data: d,
-            color: colors_html[i % colors_html.length],
+            color: colors_html[i % colors_html.length]
         };
 
         i++;
@@ -72,11 +74,11 @@ function plot_run(data) {
 
     var options = {
         grid: {
-            hoverable: true,
+            hoverable: true
         },
 
         selection: {
-            mode: 'xy',
+            mode: 'xy'
         }
     };
 
@@ -105,7 +107,7 @@ function show_plot_tooltip(x, y, contents) {
         position: 'absolute',
         display: 'none',
         top: y + 5,
-        left: x + 5,
+        left: x + 5
     }).appendTo("body");
 
     cb(tp);
@@ -164,7 +166,7 @@ function do_check() {
         dataType: 'json',
 
         data: {
-            document: cm.getValue(),
+            document: cm.getValue()
         },
 
         success: function(ret) {
@@ -179,7 +181,7 @@ function do_check() {
                 Graph.set_network(ret.network);
                 clear_status();
             }
-        },
+        }
     });
 }
 
@@ -190,7 +192,7 @@ function do_run() {
         dataType: 'json',
 
         data: {
-            document: cm.getValue(),
+            document: cm.getValue()
         },
 
         success: function(ret) {
@@ -207,7 +209,7 @@ function do_run() {
                 plot_run(ret);
                 clear_status();
             }
-        },
+        }
     });
 }
 
@@ -217,14 +219,14 @@ function do_share() {
         url: '/d/',
         dataType: 'json',
         data: {
-            document: cm.getValue(),
+            document: cm.getValue()
         },
         success: function(ret) {
             window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
 
             set_status($('<input type="text"/>').val(document.location.href));
             $('#status input').select();
-        },
+        }
     });
 }
 
@@ -247,7 +249,7 @@ $('#button-share').click(function() {
     do_share();
 });
 
-window.addEventListener('popstate', function(e) {
+var popstatehandler = function(e) {
     if (e.state == null) {
         return;
     }
@@ -265,7 +267,13 @@ window.addEventListener('popstate', function(e) {
     } else {
         document.location.reload();
     }
-});
+};
+
+if (window.addEventListener) {
+    window.addEventListener('popstate', popstatehandler);
+} else {
+    window.onpopstate = popstatehandler;
+}
 
 do_check();
 
