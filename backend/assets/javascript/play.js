@@ -226,7 +226,7 @@ function do_run() {
     });
 }
 
-function do_share() {
+function put_document(cb) {
     $.ajax({
         type: 'PUT',
         url: '/d/',
@@ -237,8 +237,22 @@ function do_share() {
         },
 
         success: function(ret) {
-            window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
+            cb(ret);
+        },
 
+        error: function(ret) {
+            set_status(ret.responseText, 'small-error');
+        }
+    });
+}
+
+function do_share(cb) {
+    put_document(function(ret) {
+        window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
+
+        if (cb) {
+            cb(ret);
+        } else {
             var d = $('<span><em>Shared at:</em> </span>');
             var url = $('<input type="text" size="60"/>').val(document.location.href);
 
@@ -246,11 +260,13 @@ function do_share() {
 
             set_status(d);
             $('#status input').select();
-        },
-
-        error: function(ret) {
-            set_status(ret.responseText, 'small-error');
         }
+    })
+}
+
+function do_download() {
+    do_share(function(ret) {
+        document.location = '/d/' + ret.hash + '.cdn?download=1';
     });
 }
 
@@ -272,6 +288,10 @@ $('#button-run').click(function() {
 $('#button-share').click(function() {
     do_share();
 });
+
+$('#button-download').click(function() {
+    do_download();
+})
 
 var popstatehandler = function(e) {
     if (e.state == null) {

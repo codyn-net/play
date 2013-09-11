@@ -253,7 +253,14 @@ func (d DocumentHandler) Get(writer http.ResponseWriter, req *http.Request) {
 	}
 
 	if ascdn {
+		forcedown := req.FormValue("download") == "1"
+
 		writer.Header().Add("Content-Type", "text/x-cdn")
+
+		if forcedown {
+			writer.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s.cdn\"", hash))
+		}
+
 		writer.Write(blob)
 	} else {
 		if blob[len(blob)-1] == '\n' {
