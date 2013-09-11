@@ -160,7 +160,7 @@ function do_check() {
 
     $.ajax({
         type: 'POST',
-        url: '/check/',
+        url: '/graph/',
         dataType: 'json',
 
         data: {
@@ -176,6 +176,7 @@ function do_check() {
             if (ret.status != 'ok') {
                 process_parser_error(ret);
             } else {
+                Graph.set_network(ret.network);
                 clear_status();
             }
         },
@@ -236,10 +237,6 @@ cm.on('change', function() {
             check_timeout = 0;
             do_check();
     }, check_delay);
-});
-
-$('#button-check').click(function() {
-    do_check();
 });
 
 $('#button-run').click(function() {
