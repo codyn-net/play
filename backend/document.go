@@ -28,13 +28,47 @@ const DefaultDocument = `# Welcome to the codyn playground.
 # of your codyn network and makes it available by a simple URL
 # You can use this to refer to a snippet of codyn code or share
 # it with someone else.
+defines { n = 4 }
 
-defines {
-    n = 4
+templates {
+    ## Edge template implementing simple diffusive phase coupling
+    edge coupling {
+        ## The direction, useful to make symmetric coupling
+        direction = "1"
+
+        ## The phase coupling bias
+        bias = "0.25 * pi"
+
+        ## A small noise term to avoid fixed points
+        noise = "rand(-0.0001, 0.0001)"
+
+        ## The coupling term on phase
+        p' += "sin(input.p - output.p - direction * bias + noise)"
+    }
 }
 
 node "n{1:@n}" {
-    x' = "$(@@1 / @n) * sin(2 * pi * t + $(@@1 / @n) * pi)"
+    ## Phase variable with random initial conditions. We use a circular
+    ## domain constraint to limit the phase between 0 and 2 pi
+    p  = "rand(-pi, pi)" (0 : "2 * pi")
+
+    ## Differential equation of the phase variable (angular frequency)
+    p' = "2 * pi * f"
+
+    ## Frequency in Hz
+    f = "1"
+
+    ## Output as a function of the phase
+    x = "sin(p)" | out
+
+    layout at $(@1 * 3), 0
+}
+
+## Coupling beteen all the nodes
+<bidirectional>
+edge from "n{1:@n}" to "n$(@1 + 1)" : coupling {
+    direction = ["1", "-1"]
+    bias = "2 * pi / @n"
 }`
 
 type Document struct {
