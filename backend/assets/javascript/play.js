@@ -46,16 +46,16 @@ function process_parser_error(ret) {
     set_status(ret.error.message, 'error');
 }
 
-function plot_run(data) {
+function update_plot() {
     var series = [];
     var i = 0;
 
-    for (var prop in data.data) {
-        var yval = data.data[prop];
+    for (var prop in plot_data.data) {
+        var yval = plot_data.data[prop];
         var d = [];
 
         for (var j = 0; j < yval.length; ++j) {
-            d.push([data.t[j], yval[j]]);
+            d.push([plot_data.t[j], yval[j]]);
         }
 
         var serie = {
@@ -81,6 +81,11 @@ function plot_run(data) {
             mode: 'xy'
         }
     };
+
+    if (plot_selection != null) {
+        options.xaxis = { min: plot_selection.xaxis.from, max: plot_selection.xaxis.to };
+        options.yaxis = { min: plot_selection.yaxis.from, max: plot_selection.yaxis.to };
+    }
 
     $.plot('#plot', series, options);
 }
@@ -132,6 +137,19 @@ $('#plot').bind('plothover', function(ev, pos, item) {
 
         show_plot_tooltip(item.pageX, item.pageY, item.series.label + " at " + x + " = " + y);
     }
+});
+
+var plot_selection = null;
+var plot_data = null;
+
+$('#plot').bind('plotselected', function (event, ranges) {
+    plot_selection = ranges;
+    update_plot();
+});
+
+$('#plot').bind('plotunselected', function (event) {
+    plot_selection = null;
+    update_plot();
 });
 
 function set_status(message, errorclass) {
@@ -215,7 +233,10 @@ function do_run() {
             } else if (ret.status == 'compile-error') {
                 set_status(ret.error, 'error');
             } else {
-                plot_run(ret);
+                plot_data = ret;
+                plot_selection = null;
+
+                update_plot();
                 clear_status();
             }
         },
