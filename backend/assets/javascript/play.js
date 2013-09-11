@@ -143,14 +143,17 @@ function set_status(message, errorclass) {
         st.html(message);
     }
 
+    st.removeClass();
     st.addClass(errorclass);
+    st.show();
 }
 
 function clear_status() {
     var st = $('#status');
 
     st.text('');
-    st.removeClass('error');
+    st.removeClass();
+    st.hide();
 }
 
 
@@ -181,11 +184,17 @@ function do_check() {
                 Graph.set_network(ret.network);
                 clear_status();
             }
+        },
+
+        error: function(ret) {
+            set_status(ret.responseText, 'small-error');
         }
     });
 }
 
 function do_run() {
+    set_status('Simulating network...');
+
     $.ajax({
         type: 'POST',
         url: '/run/',
@@ -209,6 +218,10 @@ function do_run() {
                 plot_run(ret);
                 clear_status();
             }
+        },
+
+        error: function(ret) {
+            set_status(ret.responseText, 'error');
         }
     });
 }
@@ -218,14 +231,25 @@ function do_share() {
         type: 'PUT',
         url: '/d/',
         dataType: 'json',
+
         data: {
             document: cm.getValue()
         },
+
         success: function(ret) {
             window.history.pushState({'codyn': true, 'hash': ret.hash}, '', '/d/' + ret.hash);
 
-            set_status($('<input type="text"/>').val(document.location.href));
+            var d = $('<span><em>Shared at:</em> </span>');
+            var url = $('<input type="text" size="60"/>').val(document.location.href);
+
+            d.append(url);
+
+            set_status(d);
             $('#status input').select();
+        },
+
+        error: function(ret) {
+            set_status(ret.responseText, 'small-error');
         }
     });
 }

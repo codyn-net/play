@@ -161,7 +161,6 @@ header ul li:active {
 div#status input {
   border: 0px;
   border-left: 1px solid #aaa;
-  width: 100%;
   padding-left: 3px;
 }
 
@@ -173,7 +172,15 @@ div#status input:focus {
 div#status {
   font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
   font-size: 0.85em;
-  font-style: italic;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #d4e2f0;
+  border-bottom: 0; border-left: 0;
+  z-index: 5;
+  display: none;
+  padding: 3px;
+  font-size: 0.7em;
 }
 
 div#status.error {
