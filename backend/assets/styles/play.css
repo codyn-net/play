@@ -120,6 +120,17 @@ header ul li:active {
   color: #fff;
 }
 
+@media screen and (max-device-width: 1024px) {
+  body {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-device-width: 1024px) and (orientation: portrait) {
+  body {
+    font-size: 10px;
+  }
+}
 
 @media screen and (max-device-width: 640px) {
   #outputpane {
