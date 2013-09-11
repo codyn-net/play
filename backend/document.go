@@ -18,7 +18,7 @@ const DefaultDocument = `# Welcome to the codyn playground.
 #
 # The playground allows you to quickly test small snippets of
 # codyn networks online. After defining your network in this
-# area, you can click the Run button to run a simulation of 10
+# area, you can click the Simulate button to run a simulation of 10
 # seconds. All the variables marked as 'integrated' (i.e. states)
 # or 'out' are displayed on the right after the network has been
 # successfully simulated.
