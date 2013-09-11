@@ -39,7 +39,7 @@ body {
   font-family: 'Ubuntu Mono',menlo,monaco,monospace;
 }
 
-#plotpane {
+#outputpane {
   -webkit-flex-flow: auto;
   -webkit-box-flex: 1 1 auto;
       -webkit-flex: 1 1 auto;
@@ -51,7 +51,7 @@ body {
                       order: 2;
 }
 
-#codepane, #plotpane {
+#codepane, #outputpane {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -61,10 +61,11 @@ body {
           flex-direction: column;
 }
 
-#codepane .content, #plotpane .content {
-  border: 1px solid #d4e2f0;
-  border-top: 0px;
+#codepane .content {
+  border-right: 1px solid #d4e2f0;
+}
 
+#codepane .content, #plotpane .content, #graphpane .content {
   -webkit-flex-flow: auto;
   -webkit-box-flex: 1 1 auto;
       -webkit-flex: 1 1 auto;
@@ -73,12 +74,36 @@ body {
   position: relative;
 }
 
-#codepane .content {
-  margin-right: 2px;
+#plotpane, #graphpane {
+  -webkit-flex-flow: auto;
+  -webkit-box-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+     -moz-box-flex: 1;
+              flex: 1 1 auto;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+
+              box-orient: vertical;
+  -webkit-flex-direction: column;
+          flex-direction: column;
 }
 
-#plotpane .content {
-  margin-left: 2px;
+#graph {
+  cursor: pointer;
+}
+
+#plotpane {
+  -webkit-box-ordinal-group: 1;
+              -webkit-order: 1;
+                      order: 1;
+}
+
+#graphpane {
+  -webkit-box-ordinal-group: 2;
+              -webkit-order: 2;
+                      order: 2;
 }
 
 #plotpane #plot {
@@ -92,7 +117,7 @@ body {
   padding: 0px 5px 0px 5px;
 }
 
-#codepane header, #plotpane header {
+header {
   height: 2em;
 
  -webkit-box-flex: 1 1 2em;
@@ -165,13 +190,10 @@ header span.title {
   color: #fff;
 }
 
-#codepane header ul li:first-child {
-  margin-right: -1px;
-}
 
 
 @media screen and (max-device-width: 640px) {
-  #plotpane {
+  #outputpane {
     display: none;
   }
 
