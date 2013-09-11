@@ -209,6 +209,9 @@ var Graph = {
 
 	unit: 50,
 
+	min_unit: 10,
+	max_unit: 100,
+
 	_render_grid: function(ctx) {
 		ctx.save();
 
@@ -398,6 +401,24 @@ var Graph = {
 		this._dragging_orig = [this.x, this.y];
 	},
 
+	zoom: function(direction) {
+		if (direction > 0) {
+			this.unit *= 1.1;
+		} else {
+			this.unit *= 0.9;
+		}
+
+		this.unit = Math.round(this.unit);
+
+		if (this.unit > this.max_unit) {
+			this.unit = this.max_unit;
+		} else if (this.unit < this.min_unit) {
+			this.unit = this.min_unit;
+		}
+
+		this.render();
+	},
+
 	set: function(canvas) {
 		this.canvas = canvas;
 
@@ -416,6 +437,16 @@ var Graph = {
 
 		canvas.on('mousemove', function (e) {
 			Graph._mousemove(e);
+		});
+
+		canvas.on('mousewheel', function(e) {
+			var delta = e.originalEvent.wheelDeltaY;
+
+			if (delta > 0) {
+				Graph.zoom(1);
+			} else if (delta < 0) {
+				Graph.zoom(-1);
+			}
 		});
 	}
 }
