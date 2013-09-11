@@ -3,107 +3,60 @@
 @import url('hl.css');
 
 body {
-  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
-  position: relative;
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
 
   margin: 0;
 
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: flex;
-
   height: 100%;
   width: 100%;
-
-              box-orient: horizontal;
-  -webkit-flex-direction: row;
-          flex-direction: row;
 }
 
 #codepane {
-  -webkit-flex-basis: 80ex;
-  -webkit-flex-basis: 80ch;
-  flex-basis: 80ch;
-  width: 80ex;
-  width: 80ch;
-  -webkit-box-flex: 0 1 80ch;
-      -webkit-flex: 0 1 80ch;
-     -moz-box-flex: 0;
-              flex: 0 1 80ch;
-
-  -webkit-box-ordinal-group: 1;
-              -webkit-order: 1;
-                      order: 1;
-
-  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 80ex; width: 80ch;
 }
 
 #outputpane {
-  -webkit-flex-flow: auto;
-  -webkit-box-flex: 1 1 auto;
-      -webkit-flex: 1 1 auto;
-     -moz-box-flex: 1;
-              flex: 1 1 auto;
-
-  -webkit-box-ordinal-group: 2;
-              -webkit-order: 2;
-                      order: 2;
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  left: 80ex; left: 80ch;
 }
 
-#codepane, #outputpane {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
+header {
+  height: 2em;
 
-              box-orient: vertical;
-  -webkit-flex-direction: column;
-          flex-direction: column;
+  background: -webkit-gradient(linear, left top, left bottom, from(#3465a4), to(#204a87));
+  background: linear-gradient(to bottom, #3465a4 , #204a87);
+
+  font-family: Ubuntu,'Droid Sans','DejaVu Sans',Arial,sans-serif;
+}
+
+.content {
+  position: absolute;
+  top: 2em; left: 0; right: 0; bottom: 0;
 }
 
 #codepane .content {
   border-right: 1px solid #d4e2f0;
 }
 
-#codepane .content, #plotpane .content, #graphpane .content {
-  -webkit-flex-flow: auto;
-  -webkit-box-flex: 1 1 auto;
-      -webkit-flex: 1 1 auto;
-              flex: 1 1 auto;
-
+#plotpane {
   position: relative;
+  height: 50%;
 }
 
-#plotpane, #graphpane {
-  -webkit-flex-flow: auto;
-  -webkit-box-flex: 1 1 auto;
-      -webkit-flex: 1 1 auto;
-     -moz-box-flex: 1;
-              flex: 1 1 auto;
-
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-
-              box-orient: vertical;
-  -webkit-flex-direction: column;
-          flex-direction: column;
+#graphpane {
+  position: relative;
+  height: 50%;
 }
 
 #graph {
   cursor: pointer;
-}
-
-#plotpane {
-  -webkit-box-ordinal-group: 1;
-              -webkit-order: 1;
-                      order: 1;
-}
-
-#graphpane {
-  -webkit-box-ordinal-group: 2;
-              -webkit-order: 2;
-                      order: 2;
+  position: absolute;
+  top: 2em; left: 0; right: 0; bottom: 0;
+  margin: 0;
+  padding: 0;
 }
 
 #plotpane #plot {
@@ -117,34 +70,11 @@ body {
   padding: 0px 5px 0px 5px;
 }
 
-header {
-  height: 2em;
-
- -webkit-box-flex: 1 1 2em;
-     -webkit-flex: 0 0 2em;
-             flex: 0 0 2em;
-
-  background: -webkit-gradient(linear, left top, left bottom, from(#3465a4), to(#204a87));
-  background: linear-gradient(to bottom, #3465a4 , #204a87);
-
-  font-family: Cantarell,'Droid Sans',Ubuntu,'DejaVu Sans',Arial,sans-serif;
-}
-
-#codepane header {
-  padding-right: 10px;
-}
-
 #codepane .CodeMirror {
-  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
-  border: 0;
   position: absolute;
-  right: 0; left: 0; top: 0; bottom: 0;
+  left: 0; top: 0; right: 0; bottom: 0;
   height: auto;
-}
-
-#codepane .CodeMirror-scroll {
-  position: absolute;
-  right: 0; left: 0; top: 0; bottom: 0;
+  font-family: 'Ubuntu Mono',menlo,monaco,monospace;
 }
 
 header span.title {
@@ -157,7 +87,7 @@ header span.title {
   padding-left: 10px;
 }
 
-#codepane header ul {
+header ul {
   float: right;
   padding: 0;
   margin: 0;
@@ -166,7 +96,7 @@ header span.title {
   padding-top: 0.3em;
 }
 
-#codepane header ul li {
+header ul li {
   float: right;
   padding: 0px 10px 1px 10px;
   margin: 0px 3px 0px 3px;
@@ -181,15 +111,14 @@ header span.title {
   box-shadow: 0 0 3px #000;
 }
 
-#codepane header ul li:hover {
+header ul li:hover {
   background: linear-gradient(to top, #3465a4, #729fcf);
 }
 
-#codepane header ul li:active {
+header ul li:active {
   background: #729fcf;
   color: #fff;
 }
-
 
 
 @media screen and (max-device-width: 640px) {
