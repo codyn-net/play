@@ -26,10 +26,19 @@ body {
 header {
   height: 2em;
 
-  background: -webkit-gradient(linear, left top, left bottom, from(#3465a4), to(#204a87));
-  background: linear-gradient(to bottom, #3465a4 , #204a87);
+  background: -webkit-gradient(linear, left top, left bottom, from(#eeeeec), to(#d3d7cf));
+  background: linear-gradient(to bottom, #eeeeec, #d3d7cf);
 
   font-family: Ubuntu,'Droid Sans','DejaVu Sans',Arial,sans-serif;
+}
+
+#graphpane header {
+  background: none;
+  border-bottom: 1px solid #d3d7cf;
+}
+
+#graphpane header span.title {
+  text-shadow: none;
 }
 
 .content {
@@ -38,7 +47,7 @@ header {
 }
 
 #codepane .content {
-  border-right: 1px solid #d4e2f0;
+  border-right: 1px solid #d3d7cf;
 }
 
 #plotpane {
@@ -79,8 +88,8 @@ header {
 
 header span.title {
   font-weight: bold;
-  color: #d4e2f0;
-  text-shadow: 0px 0px 3px #000;
+  color: #888a85;
+  text-shadow: 1px 1px 1px #fff;
   letter-spacing: 2px;
   vertical-align: middle;
   line-height: 2em;
@@ -105,18 +114,21 @@ header ul li {
           border-radius: 5px;
 
   cursor: pointer;
-  background: linear-gradient(to top, #204a87, #3465a4);
-  color: #d4e2f0;
 
-  box-shadow: 0 0 3px #000;
+  background: -webkit-gradient(linear, left top, left bottom, from(#eeeeec), to(#d3d7cf));
+  background: linear-gradient(to bottom, #f3f3f3, #eeeeec);
+
+  color: #007bff;
+
+  box-shadow: 1px 1px 1px #babdb6;
 }
 
 header ul li:hover {
-  background: linear-gradient(to top, #3465a4, #729fcf);
+  background: #fff;
 }
 
 header ul li:active {
-  background: #729fcf;
+  background: #007bff;
   color: #fff;
 }
 
@@ -185,7 +197,7 @@ div#status {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   background: #fff;
-  border: 1px solid #d4e2f0;
+  border: 1px solid #d3d7cf;
   border-bottom: 0; border-left: 0;
   z-index: 5;
   display: none;
