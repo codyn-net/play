@@ -205,12 +205,19 @@ var Graph = {
 
 	x: 0,
 	y: 0,
+
 	mouse_state: 0,
 
 	unit: 50,
 
+	target: {
+		unit: 50,
+		x: 0,
+		y: 0
+	},
+
 	min_unit: 10,
-	max_unit: 100,
+	max_unit: 200,
 
 	_render_grid: function(ctx) {
 		ctx.save();
@@ -232,7 +239,7 @@ var Graph = {
 		}
 
 		ctx.setLineWidth(1);
-		ctx.strokeStyle = '#e7f1fc';
+		ctx.strokeStyle = '#eeeeec';
 
 		ctx.beginPath();
 
@@ -333,8 +340,13 @@ var Graph = {
 			this._objects.push(nodes[i]);
 		}
 
+		$(this).stop();
+
 		this.x = Math.round(this.canvas.width() / 2 - x * this.unit);
 		this.y = Math.round(this.canvas.height() / 2 - y * this.unit);
+
+		this.target.x = this.x;
+		this.target.y = this.y;
 
 		this.render();
 	},
@@ -393,6 +405,11 @@ var Graph = {
 		this.x = this._dragging_orig[0] + (e.pageX - this._dragging[0]);
 		this.y = this._dragging_orig[1] + (e.pageY - this._dragging[1]);
 
+		$(this).stop();
+
+		this.target.x = this.x;
+		this.target.y = this.y;
+
 		this.render();
 	},
 
@@ -401,22 +418,60 @@ var Graph = {
 		this._dragging_orig = [this.x, this.y];
 	},
 
-	zoom: function(direction) {
+	zoom: function(direction, at) {
+		var newunit;
+
 		if (direction > 0) {
-			this.unit *= 1.1;
+			newunit = this.target.unit * 1.1;
 		} else {
-			this.unit *= 0.9;
+			newunit = this.target.unit * 0.9;
 		}
 
-		this.unit = Math.round(this.unit);
+		newunit = Math.round(newunit);
 
-		if (this.unit > this.max_unit) {
-			this.unit = this.max_unit;
-		} else if (this.unit < this.min_unit) {
-			this.unit = this.min_unit;
+		if (newunit > this.max_unit) {
+			newunit = this.max_unit;
+		} else if (newunit < this.min_unit) {
+			newunit = this.min_unit;
 		}
 
-		this.render();
+		if (newunit == this.target.unit) {
+			return;
+		}
+
+		var newx = this.target.x;
+		var newy = this.target.y;
+
+		if (at) {
+			var ratio = newunit / this.target.unit;
+
+			newx += (at.x - ((at.x - this.target.x) * ratio + this.target.x));
+			newy += (at.y - ((at.y - this.target.y) * ratio + this.target.y));
+
+			newx = Math.round(newx);
+			newy = Math.round(newy);
+		}
+
+		$(this).stop();
+
+		this.target.unit = newunit;
+		this.target.x = newx;
+		this.target.y = newy;
+
+		var a = $(this).animate(
+			{
+				unit: newunit,
+				x: newx,
+				y: newy
+			},
+
+			{
+				duration: 240,
+				step: function() {
+					this.render();
+				}
+			}
+		);
 	},
 
 	set: function(canvas) {
@@ -442,11 +497,15 @@ var Graph = {
 		canvas.on('mousewheel', function(e) {
 			var delta = e.originalEvent.wheelDeltaY;
 
+			var po = $(this).offset();
+			var at = {x: e.pageX - po.left, y: e.pageY - po.top};
+
 			if (delta > 0) {
-				Graph.zoom(1);
+				Graph.zoom(1, at);
 			} else if (delta < 0) {
-				Graph.zoom(-1);
+				Graph.zoom(-1, at);
 			}
+			
 		});
 	}
 }
