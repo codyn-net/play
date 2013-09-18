@@ -279,6 +279,9 @@ var Graph = {
 		for (var i in network.children) {
 			var child = network.children[i];
 
+			// Canvas y is basically inverse, so we invert y here
+			child.y = -child.y;
+
 			if ($.inArray('node', child.type) != -1) {
 				var obj = new Node(child);
 				nodes.push(obj);
