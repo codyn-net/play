@@ -271,12 +271,12 @@ func (d DocumentHandler) Get(writer http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
+func (d DocumentHandler) store(writer http.ResponseWriter, req *http.Request) (string, bool) {
 	doc := []byte(req.FormValue("document"))
 
 	if len(doc) == 0 {
 		http.Error(writer, "Missing document", http.StatusBadRequest)
-		return
+		return "", false
 	}
 
 	if doc[len(doc)-1] != '\n' {
@@ -284,6 +284,16 @@ func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
 	}
 
 	if hash, err := Cache.AddDocument(doc); err == nil {
+		return hash, true
+	} else {
+		http.Error(writer, fmt.Sprintf("Failed to add document: %s", err), http.StatusInternalServerError)
+	}
+
+	return "", false
+}
+
+func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
+	if hash, ok := d.store(writer, req); ok {
 		retval := map[string]string{
 			"hash": hash,
 		}
@@ -292,8 +302,12 @@ func (d DocumentHandler) Put(writer http.ResponseWriter, req *http.Request) {
 
 		enc := json.NewEncoder(writer)
 		enc.Encode(retval)
-	} else {
-		http.Error(writer, fmt.Sprintf("Failed to add document: %s", err), http.StatusInternalServerError)
+	}
+}
+
+func (d DocumentHandler) Post(writer http.ResponseWriter, req *http.Request) {
+	if hash, ok := d.store(writer, req); ok {
+		http.Redirect(writer, req, "http://play.codyn.net/d/" + hash, http.StatusFound)
 	}
 }
 
