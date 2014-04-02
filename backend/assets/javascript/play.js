@@ -61,7 +61,10 @@ function update_plot() {
         var serie = {
             label: prop,
             data: d,
-            color: colors_html[i % colors_html.length]
+            color: colors_html[i % colors_html.length],
+            downsample: {
+                threshold: 300
+            }
         };
 
         i++;
