@@ -204,6 +204,13 @@ function do_check() {
             } else {
                 Graph.set_network(ret.network);
                 clear_status();
+
+                var cs = $('#continously-simulate-button');
+
+                if (cs.prop('checked'))
+                {
+                    do_run();
+                }
             }
         },
 
@@ -315,7 +322,20 @@ $('#button-share').click(function() {
 
 $('#button-download').click(function() {
     do_download();
-})
+});
+
+$('#continously-simulate-button').change(function() {
+    if (this.checked) {
+        do_run();
+    }
+
+    return true;
+});
+
+$('#continously-simulate-button').click(function(e) {
+    e.stopPropagation();
+    return true;
+});
 
 var popstatehandler = function(e) {
     if (e.state == null) {
