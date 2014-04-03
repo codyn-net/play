@@ -29,7 +29,7 @@ header {
   background: -webkit-gradient(linear, left top, left bottom, from(#eeeeec), to(#d3d7cf));
   background: linear-gradient(to bottom, #eeeeec, #d3d7cf);
 
-  font-family: Ubuntu,'Droid Sans','DejaVu Sans',Arial,sans-serif;
+  font-family: 'DejaVu Sans',Ubuntu,'Droid Sans',Arial,sans-serif;
 }
 
 #graphpane header {
@@ -109,22 +109,27 @@ header ul li {
   float: right;
   padding: 0px 6px 1px 6px;
   margin: 0px 3px 0px 3px;
+  font-size: 0.9em;
 
   -webkit-border-radius: 5px;
           border-radius: 5px;
 
   cursor: pointer;
 
-  background: -webkit-gradient(linear, left top, left bottom, from(#eeeeec), to(#d3d7cf));
-  background: linear-gradient(to bottom, #f3f3f3, #eeeeec);
+  background: -webkit-gradient(linear, left top, left bottom, from(#007bff), to(#006de3));
+  background: linear-gradient(to bottom, #007bff, #006de3);
 
-  color: #007bff;
+  color: #fff;
 
-  box-shadow: 1px 1px 1px #babdb6;
+  box-shadow: -1px -1px 0px #eef;
+}
+
+input#continously-simulate-button {
+  margin-right: 6px;
 }
 
 header ul li:hover {
-  background: #fff;
+  background: #007bff;
 }
 
 header ul li:active {
