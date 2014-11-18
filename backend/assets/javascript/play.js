@@ -1,5 +1,8 @@
 "use strict";
 
+var plot_selection = null;
+var plot_data = null;
+
 var colors_html = [
     "#268BD2",
     "#859900",
@@ -15,6 +18,8 @@ var spacesInsteadOfTabs = function(cm) {
 var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
     cm.replaceSelection(spaces, "end", "+input");
 }
+
+var previousHidden = {};
 
 var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
     indentUnit: 4,
@@ -48,32 +53,45 @@ function process_parser_error(ret) {
 
 function update_plot() {
     var series = [];
-    var i = 0;
+    var idx = 0;
 
-    for (var prop in plot_data.data) {
-        var yval = plot_data.data[prop];
-        var d = [];
+    var onlyout = $('#plot-only-out')[0].checked;
+    var indexMap = {};
+
+    for (var i = 0; i < plot_data.data.length; i++) {
+        var d = plot_data.data[i];
+
+        if (onlyout && d.flags.indexOf('out') === -1) {
+            continue;
+        }
+
+        var yval = d.data;
+        var data = [];
 
         for (var j = 0; j < yval.length; ++j) {
-            d.push([plot_data.t[j], yval[j]]);
+            data.push([plot_data.t[j], yval[j]]);
         }
 
         var serie = {
-            label: prop,
-            data: d,
-            color: colors_html[i % colors_html.length],
+            label: d.name,
+            data: data,
+            color: colors_html[idx % colors_html.length],
             downsample: {
                 threshold: 300
             }
         };
 
-        i++;
+        indexMap[d.name] = idx;
+
+        idx++;
         series.push(serie);
     }
 
     series.sort(function(a, b) {
         return a.label < b.label ? -1 : (a.label > b.label ? 1 : 0);
     });
+
+    var origseries = series.slice(0);
 
     var options = {
         grid: {
@@ -90,7 +108,58 @@ function update_plot() {
         options.yaxis = { min: plot_selection.yaxis.from, max: plot_selection.yaxis.to };
     }
 
-    $.plot('#plot', series, options);
+    var np = {};
+
+    var hiddenSeries = function(i) {
+        return {
+                label: origseries[i].label,
+                data: [],
+                color: origseries[i].color,
+                downsample: origseries[i].downsample
+            };
+    };
+
+    for (var k in previousHidden) {
+        if (k in indexMap) {
+            var ii = indexMap[k];
+
+            np[k] = true;
+            series[ii] = hiddenSeries(ii);
+        }
+    }
+
+    previousHidden = np;
+
+    var makePlot;
+    var pl;
+
+    makePlot = function() {
+        $.plot('#plot', series, options);
+
+        var ltds = $('#plot div.legend td.legendColorBox');
+
+        for (var k in previousHidden) {
+            $(ltds[indexMap[k]]).addClass('hidden');
+        }
+
+        $.each(ltds, function(i, td) {
+            td = $(td);
+
+            td.on('click', function() {
+                if (td.hasClass('hidden')) {
+                    series[i] = origseries[i];
+                    delete previousHidden[series[i].label];
+                } else {
+                    series[i] = hiddenSeries(i);
+                    previousHidden[series[i].label] = true;
+                }
+
+                makePlot();
+            });
+        });
+    };
+
+    makePlot();
 }
 
 function show_plot_tooltip(x, y, contents) {
@@ -141,9 +210,6 @@ $('#plot').bind('plothover', function(ev, pos, item) {
         show_plot_tooltip(item.pageX, item.pageY, item.series.label + " at " + x + " = " + y);
     }
 });
-
-var plot_selection = null;
-var plot_data = null;
 
 $('#plot').bind('plotselected', function (event, ranges) {
     plot_selection = ranges;
@@ -322,6 +388,14 @@ $('#button-share').click(function() {
 
 $('#button-download').click(function() {
     do_download();
+});
+
+$('#plot-only-out').on('change', function() {
+    if (!plot_data) {
+        do_run();
+    } else {
+        update_plot();
+    }
 });
 
 $('#continously-simulate-button').change(function() {

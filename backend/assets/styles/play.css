@@ -73,6 +73,10 @@ header {
   right: 5px; left: 5px; top: 5px; bottom: 5px;
 }
 
+#plotpane #plot .legend .legendColorBox.hidden > div > div {
+  opacity: 0;
+}
+
 #plot_tooltip {
   background-color: #eee;
   border: 1px solid #aaa;
@@ -94,6 +98,17 @@ header span.title {
   vertical-align: middle;
   line-height: 2em;
   padding-left: 10px;
+}
+
+header div.actions {
+  float: right;
+  line-height: 2em;
+  margin-right: 12px;
+}
+
+header div.actions > * {
+  vertical-align: middle;
+  vertical-align: text-top;
 }
 
 header ul {

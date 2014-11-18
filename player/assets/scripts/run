@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env cdn-python
 
 from gi.repository import Cdn
 import sys, tempfile, json, os
@@ -49,10 +49,24 @@ t = [0.0, network.get_integrator().get_default_timestep(), 10.0]
 if len(monitors) != 0:
     network.run(t[0], t[1], t[2])
 
-data = {}
+data = []
 
 for monitor in monitors:
-    data[monitor.get_variable().get_full_name_for_display()] = monitor.get_data()
+    var = monitor.get_variable()
+    name = var.get_full_name_for_display()
+    flags = []
+
+    if var.has_flag(Cdn.VariableFlags.OUT):
+        flags.append('out')
+
+    if var.has_flag(Cdn.VariableFlags.INTEGRATED):
+        flags.append('integrated')
+
+    data.append({
+        'data': monitor.get_data(),
+        'name': name,
+        'flags': flags
+    })
 
 ret = {
     'status': 'ok',
