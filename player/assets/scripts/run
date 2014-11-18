@@ -1,4 +1,4 @@
-#!/usr/bin/env cdn-python
+#!/usr/bin/env python
 
 from gi.repository import Cdn
 import sys, tempfile, json, os
